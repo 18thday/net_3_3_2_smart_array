@@ -8,22 +8,16 @@ public:
     }
 
     smart_array(const smart_array& other) : array_(new int[other.capacity_]), size_(0), capacity_(other.capacity_) {
-        for (size_t i = 0; i < other.size_; ++i) {
-            array_[i] = other.array_[i];
-        }
-        size_ = other.size_;
+        copy(other);
     }
     smart_array& operator=(const smart_array& other) {
         if (this == &other) {
             return *this;
         }
-        if (other.size_ > capacity_) {
-            throw std::out_of_range("operator= error: copied array size > array capacity");
-        }
-        for (size_t i = 0; i < other.size_; ++i) {
-            array_[i] = other.array_[i];
-        }
-        size_ = other.size_;
+
+        smart_array temp(other.capacity_);
+        temp.copy(other);
+        swap(temp);
         return *this;
     }
 
@@ -78,6 +72,13 @@ private:
         array_ = nullptr;
         size_ = 0;
         capacity_ = 0;
+    }
+
+    void copy(const smart_array& other) {
+        for (size_t i = 0; i < other.size_; ++i) {
+            array_[i] = other.array_[i];
+        }
+        size_ = other.size_;
     }
 };
 
